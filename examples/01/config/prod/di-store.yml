@@ -1,0 +1,4 @@
+store:
+  server:
+    http:
+      port: 8080

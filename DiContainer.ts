@@ -10,21 +10,25 @@ import {DiContainerLogLevels} from "./enums/DiContainerLogLevels";
 import {DiContainerInitConfig} from "./interfaces/DiContainerInitConfig";
 import {DiInjectableOptions} from "./interfaces/DiInjectableOptions";
 
-export class DiContainer {
+export class DiContainer extends EventEmitter {
     private readonly _options: DiContainerOptions;
     private readonly _context: Map<string, any> = new Map<string, any>;
     private readonly _setupScripts: Map<string, any> = new Map<string, any>;
     private readonly _diDependencies: Map<string, DiContainerDependencyDescriptor> = new Map()
     private _store: { [key: string]: any } = {};
     private _containerInitialised: boolean = false;
-    private eventEmitter: EventEmitter = new EventEmitter();
 
     get containerInitialised(): boolean {
         return this._containerInitialised;
     }
 
     constructor(options: Partial<DiContainerOptions>) {
-        if(typeof options !== "object") throw new Error("invalid options object was provided")
+        super();
+
+        if(typeof options !== "object") {
+            throw new Error("invalid options object was provided")
+        }
+
         this._options = Object.assign({
             dependencyResolveStrategy: DependencyResolveStrategyKind.FAIL,
             debug: false,
@@ -69,20 +73,9 @@ export class DiContainer {
         return this._context.has(path)
     }
 
-    public on(eventName: DiContainerEvents, listener: (...args: any[]) => void) {
-        return this.eventEmitter.on(eventName, listener)
-    }
-
-    public off(eventName: DiContainerEvents, listener: (...args: any[]) => void) {
-        return this.eventEmitter.off(eventName, listener)
-    }
-
-    public once(eventName: DiContainerEvents, listener: (...args: any[]) => void) {
-        return this.eventEmitter.once(eventName, listener)
-    }
 
     private emitLog(level: DiContainerLogLevels, message: string) {
-        this.eventEmitter.emit(DiContainerEvents.ON_LOG, {level, message, callstack: new Error().stack})
+        this.emit(DiContainerEvents.ON_LOG, {level, message, callstack: new Error().stack})
     }
 
     async init(config: DiContainerInitConfig) {
@@ -196,8 +189,8 @@ export class DiContainer {
                 }
             }
 
-            this.eventEmitter.emit(DiContainerEvents.DEPENDENCIES_RESOVLED, this._diDependencies.values())
-            this.eventEmitter.emit(DiContainerEvents.DEPENDENCIES_RESOVLED_WIHTOUT_CONFIG, diDependenciesWithoutConfig)
+            this.emit(DiContainerEvents.DEPENDENCIES_RESOVLED, this._diDependencies.values())
+            this.emit(DiContainerEvents.DEPENDENCIES_RESOVLED_WIHTOUT_CONFIG, diDependenciesWithoutConfig)
         }
 
         await this.containerStartedHandleEvents()
@@ -220,7 +213,7 @@ export class DiContainer {
                 await anyDependency.onContainerReady(this);
             }
         }
-        this.eventEmitter.emit(DiContainerEvents.ON_CONTAINER_READY, this)
+        this.emit(DiContainerEvents.ON_CONTAINER_READY, this)
     }
 
     public async shutdown() {
@@ -233,7 +226,7 @@ export class DiContainer {
                 await anyDependency.onContainerShutdown(this);
             }
         }
-        this.eventEmitter.emit(DiContainerEvents.ON_CONTAINER_SHUTDOWN, this)
+        this.emit(DiContainerEvents.ON_CONTAINER_SHUTDOWN, this)
 
         this._context.clear();
         this._containerInitialised = false;

@@ -1,0 +1,15 @@
+extends:
+  - ./di-store.yml
+options:
+  searchPaths:
+    - path: src/**/*.js
+      options:
+        ignore: "**/index.js"
+
+items:
+  - id: logger
+    setup: src/config/di/DiLoggerSetup.js
+  - id: server
+    setup: src/config/di/DiServerSetup.js
+    requires:
+      - logger

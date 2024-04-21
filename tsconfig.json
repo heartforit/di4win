@@ -117,5 +117,5 @@
     "skipLibCheck": true
     /* Skip type checking all .d.ts files. */
   },
-  "exclude": ["node_modules", "happy-frontend", "tests"]
+  "exclude": ["node_modules"]
 }

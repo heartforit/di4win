@@ -2,16 +2,16 @@ DI Container
 =====
 **Introduction:**
 
-****DI Container**** is, as the name implies, yet another dependency injection container for node.js
-It helps by its nature to increase code quality, maintainability and performance (reduce memory usage)
+****DI Container**** is, as the name implies, yet another dependency injection container for node.js.
+It helps by its nature to increase **code quality**, **maintainability** and **performance (reduce memory usage**
 
 **Problem:**
-* Code is hard to replace if code base grows over certain levels / class numbers
+* Code is hard to replace if the code base grows over certain levels / class numbers
 * Imports start to get a mess and refactoring and reading codes takes more and more time (boilerplate)
 * Specific parts of the software have to wait for others, manuel synchronisation gets unreadable and hard testable 
 * Constructors and functions should wait for async processes, before be initialised (no async constructors in nodejs)
 * Patterns like factory and singleton get repeated over and over again
-* Testing specific aspects of the software gets more hard, because more and more mock code is needed to define simple instances
+* Testing specific aspects of the software gets challenging over time, because more and more mock code is needed to define simple instances
 * Overall complexity by direct links reduces chances to decommission part of the software
 
 **Motivation:**
@@ -39,15 +39,15 @@ code
 * You want to work with edge-cases like dependencies, which export objects or run commonjs code
 * You want to use configuration files with (key,value) nature to be easy accessible for you at runtime 
 * You want to have the flexibility to change parts of the code with custom implementations:
-for example you want to load config files which are encrypted somehow etc
+for example you want to load config files which are encrypted somehow etc.
 * You don't like to write the same code over and over again to create some instances
 * You need to listen for important life cycles event for example when the container is ready to be used
 or shutdown (async support)
 
 **When should I not use this library?**
 * You don't need this project because you are running a small project
-* You are running your software in the browser
-* You are running a big enterprise project and want to start with something fancy
+* You are running your software in the browser (but usage is possible was well)
+
 
 **Features**
 * [x] Load dependencies with config (file optional) (to overrule, load edge-cases or commonjs files)
@@ -81,64 +81,9 @@ or shutdown (async support)
 
 **Examples**
 
-```ts
+* [Example one](./examples/01)
+  * Contains an example with custom static file support with yaml and multi environment setup
+* [Example two](./examples/02)
+  * Contains an example with custom injection with annotations
 
-(async () => {
-  // basic usage
-  const DEBUG_DI_CONTAINER = false
-  const exampleConfig = {
-    store: {
-      "key": "value"
-    },
-    options: {
-      searchPaths: [{
-        "path": "src/domain/**/*.js",
-        "options": {
-          "ignore": "**/index.js"
-        }
-      }]
-    },
-    items: [{
-      id: "logger",
-      singleton: true, // default value can be removed
-      lazy: false, // default value can be removed
-      setup: "src/some/path.js"
-    }]
-    /* 
-    // content for src/some/path.js
-    // notice: diContainer: DiContainer is always defined and can be used to access the di container
-    // and its functions
-    export default async function (diContainer: DiContainer) {
-      const anyOtherDependency = await diContainer.get("anyOtherDependency")
-      const anyOtherDependency : WithType = <WithType>await diContainer.get("someTyped")
-      const keyValueData = diContainer.getStore().key
-    }
-    */
-  }
-  const diContainer = new DiContainer({
-    dependencyResolveStrategy: DependencyResolveStrategyKind.FAIL,
-    fileResolver: async (path: string, options: any) => {
-      // third party library
-      return glob(path, options)
-    },
-    debug: DEBUG_DI_CONTAINER,
-    emitDependencies: false
-  });
-
-  if (DEBUG_DI_CONTAINER) {
-    diContainer.on(DiContainerEvents.ON_LOG, (logLevel: string, message: string) => {
-      // your logger for example "winston" etc.
-      switch (logLevel) {
-      case DiContainerLogLevels.DEBUG:
-        logger.debug(message)
-        break;
-      }
-    })
-  }
-
-  await diContainer.init(exampleConfig)
-
-
-})()
-```
 For more details watch the example or test folder 
