@@ -36,20 +36,28 @@ powerful customisation and uses proven design patterns like singleton and factor
 * (optional) I want to have config files for different environments
 
 **When should I use this library?**
-* :question: You want a dependency free (fat-free), "type-safe", tested and easy to learn library
-* :question: You are searching for a solution to make dependencies:
+
+:question: You want a dependency free (fat-free), "type-safe", tested and easy to learn library
+
+:question: You are searching for a solution to make dependencies:
   * replaceable
   * testable 
   * automatically initialised
-* :question: You are looking for a solution to run synchronous constructors which depend on asynchronous 
+
+:question: You are looking for a solution to run synchronous constructors which depend on asynchronous 
 code
-* :question: You have implicit dependencies
-* :question: You want to work with edge-cases like dependencies, which export objects or run commonjs code
-* :question: You want to use configuration files with (key,value) nature to be easy accessible for you at runtime 
-* :question: You want to have the flexibility to change parts of the code with custom implementations:
-for example you want to load config files which are encrypted somehow etc.
-* :question: You don't like to write the same code over and over again to create some instances
-* :question: You need to listen for important life cycles event for example when the container is ready to be used
+
+:question: You have implicit dependencies
+
+:question: You want to work with edge-cases like dependencies, which export objects or run commonjs code
+
+:question: You want to use configuration files with (key,value) nature to be easy accessible for you at runtime 
+
+:question: You want to have the flexibility to change parts of the code with custom implementations:
+
+For example, you want to load config files which are encrypted somehow etc.
+* You don't like to write the same code over and over again to create some instances
+* You need to listen for important life cycles event for example when the container is ready to be used
 or shutdown (async support)
 
 **When should I not use this library?**
@@ -58,21 +66,34 @@ or shutdown (async support)
 
 
 **Features**
-* :heavy_plus_sign: Load dependencies with config (file optional) (to overrule, load edge-cases or commonjs files)
-* :heavy_plus_sign: Includes simple build-in (key,value) store (immutable at runtime)
-* :heavy_plus_sign: Includes events for startup and shutdown of the container (with async support)
-* :heavy_plus_sign: Includes events for all major interactions
-* :heavy_plus_sign: Define implicit require relationships (means wait for a other dependency to be ready)
-* :heavy_plus_sign: Multi-environment support (default, production or whatever)
-* :heavy_plus_sign: Auto-loader for dependencies with annotation based system (typescript only)
-* :heavy_plus_sign: Allow control for dependency at class level with param annotation (id, singleton, lazy, requires)
-* :heavy_plus_sign: Dump dynamically loaded dependencies to file system (for legacy support or faster start up times)
-* :heavy_plus_sign: Replace following aspects of the implementation with custom implementation:
-  * :heavy_plus_sign: Define how function arguments get parsed (to automatically resolve dependencies by argument names)
-  * :heavy_plus_sign: Define how the file system should be scanned (glob etc.)
-  * :heavy_plus_sign: Define how dependencies should be named in the container (match coding standards of your project)
-* :heavy_plus_sign: Debug mode to follow the resolving in cases of errors and conflicts
-* :heavy_plus_sign: Define custom resolve strategy for conflicts
+
+:heavy_plus_sign: Load dependencies with config (file optional) (to overrule, load edge-cases or commonjs files)
+
+:heavy_plus_sign: Includes simple build-in (key,value) store (immutable at runtime)
+
+:heavy_plus_sign: Includes events for startup and shutdown of the container (with async support)
+
+:heavy_plus_sign: Includes events for all major interactions
+
+:heavy_plus_sign: Define implicit require relationships (means wait for a other dependency to be ready)
+
+:heavy_plus_sign: Multi-environment support (default, production or whatever)
+
+:heavy_plus_sign: Auto-loader for dependencies with annotation based system (typescript only)
+
+:heavy_plus_sign: Allow control for dependency at class level with param annotation (id, singleton, lazy, requires)
+
+:heavy_plus_sign: Dump dynamically loaded dependencies to file system (for legacy support or faster start up times)
+
+:heavy_plus_sign: Replace following aspects of the implementation with custom implementation:
+
+  * Define how function arguments get parsed (to automatically resolve dependencies by argument names)
+  * Define how the file system should be scanned (glob etc.)
+  * Define how dependencies should be named in the container (match coding standards of your project)
+
+:heavy_plus_sign: Debug mode to follow the resolving in cases of errors and conflicts
+
+:heavy_plus_sign: Define custom resolve strategy for conflicts
   * Currently supported: omit, fail, overwrite
 
 **Available conflict resolve strategies**
