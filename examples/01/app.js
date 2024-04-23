@@ -11,4 +11,6 @@ const DiService_1 = require("./DiService");
     });
     const someClass = await DiService_1.diService.diContainer.get("someClass");
     console.log(someClass);
+    const CommonJsLegacyClass = await DiService_1.diService.diContainer.get("commonJsLegacyClass");
+    console.log(CommonJsLegacyClass);
 })();

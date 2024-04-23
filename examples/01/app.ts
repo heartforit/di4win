@@ -18,4 +18,6 @@ import SomeClass from "./src/SomeClass";
 
     const someClass = <SomeClass>await diService.diContainer.get("someClass");
     console.log(someClass)
+    const CommonJsLegacyClass : any = await diService.diContainer.get("CommonJsLegacyClass");
+    console.log(CommonJsLegacyClass)
 })()
