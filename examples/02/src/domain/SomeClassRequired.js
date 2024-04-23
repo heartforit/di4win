@@ -39,9 +39,9 @@ var __setFunctionName = (this && this.__setFunctionName) || function (f, name, p
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.SomeClassRequired = void 0;
-const Injectable_1 = require("../../../../Injectable");
+const index_1 = require("../../../../index");
 let SomeClassRequired = exports.SomeClassRequired = (() => {
-    let _classDecorators = [(0, Injectable_1.Injectable)({ id: "someClassRequired" })];
+    let _classDecorators = [(0, index_1.Injectable)({ id: "someClassRequired" })];
     let _classDescriptor;
     let _classExtraInitializers = [];
     let _classThis;

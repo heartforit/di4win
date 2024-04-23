@@ -1,6 +1,5 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Injectable = void 0;
 function Injectable(input) {
     return function some(target, context) {
         if (!target.prototype.__diMeta)
@@ -27,4 +26,4 @@ function Injectable(input) {
         }
     };
 }
-exports.Injectable = Injectable;
+exports.default = Injectable;

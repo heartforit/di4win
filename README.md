@@ -1,9 +1,17 @@
-DI Container 
-=====
+<div align="center">
+
+  <h1><code>Di4win</code></h1>
+  <strong>
+      Di4win (spoken di-for-win) is yet another simple to use straight forward and classic dependency injection container.
+      Its core idea is simple, straightforward, dependency free and extensible.
+  </strong>
+
+</div>
+
+
 **Introduction:**
 
-****DI Container**** is, as the name implies, yet another dependency injection container for node.js.
-It helps by its nature to increase **code quality**, **maintainability** and **performance (reduce memory usage**
+By its nature it helps to increase **code quality**, **maintainability** and **performance (reduce memory usage**.
 
 **Problem:**
 * Code is hard to replace if the code base grows over certain levels / class numbers
@@ -19,29 +27,29 @@ It helps by its nature to increase **code quality**, **maintainability** and **p
 * I want the code to hold as less state as possible to reduce possible side effects and unwanted mutations
 * I want the code to be more memory efficient
 * I want to create a flexible, easy to use, fast to learn library which supports
-powerful customisation and uses proven design patterns like singleton and factory
+powerful customisation and uses proven design patterns like singleton and factory, as well as laziness
 * I want to have life cycle events when important things happen
-* I want to have config files for different environments
 * I want config files to allow overrides
 * I want to have the chance to deal with edge-cases (legacy code)
 * I want config files with build in (key,value) store to be easy to be accessible without second solution
 * I want to have the flexibility to change parts of the code with custom implementations which fit the project
+* (optional) I want to have config files for different environments
 
 **When should I use this library?**
-* You want a dependency free (fat-free), "type-safe", tested and easy to learn library
-* You are searching for a solution to make dependencies:
+* :question: You want a dependency free (fat-free), "type-safe", tested and easy to learn library
+* :question: You are searching for a solution to make dependencies:
   * replaceable
   * testable 
   * automatically initialised
-* You are looking for a solution to run synchronous constructors which depend on asynchronous 
+* :question: You are looking for a solution to run synchronous constructors which depend on asynchronous 
 code
-* You have implicit dependencies
-* You want to work with edge-cases like dependencies, which export objects or run commonjs code
-* You want to use configuration files with (key,value) nature to be easy accessible for you at runtime 
-* You want to have the flexibility to change parts of the code with custom implementations:
+* :question: You have implicit dependencies
+* :question: You want to work with edge-cases like dependencies, which export objects or run commonjs code
+* :question: You want to use configuration files with (key,value) nature to be easy accessible for you at runtime 
+* :question: You want to have the flexibility to change parts of the code with custom implementations:
 for example you want to load config files which are encrypted somehow etc.
-* You don't like to write the same code over and over again to create some instances
-* You need to listen for important life cycles event for example when the container is ready to be used
+* :question: You don't like to write the same code over and over again to create some instances
+* :question: You need to listen for important life cycles event for example when the container is ready to be used
 or shutdown (async support)
 
 **When should I not use this library?**
@@ -50,22 +58,22 @@ or shutdown (async support)
 
 
 **Features**
-* [x] Load dependencies with config (file optional) (to overrule, load edge-cases or commonjs files)
-* [x] Includes simple build-in (key,value) store (immutable at runtime)
-* [x] Includes events for startup and shutdown of the container (with async support)
-* [x] Includes events for all major interactions
-* [x] Define implicit require relationships (means wait for a other dependency to be ready)
-* [x] Multi-environment support (default, production or whatever)
-* [x] Auto-loader for dependencies with annotation based system (typescript only)
-* [x] Allow control for dependency at class level with param annotation (id, singleton, lazy, requires)
-* [x] Dump dynamically loaded dependencies to file system (for legacy support or faster start up times)
-* [x] Replace following aspects of the implementation with custom implementation:
-  * [x] Define how function arguments get parsed (to automatically resolve dependencies by argument names)
-  * [x] Define how the file system should be scanned (glob etc.)
-  * [x] Define how dependencies should be named in the container (match coding standards of your project)
-* [x] Debug mode to follow the resolving in cases of errors and conflicts
-* [x] Define custom resolve strategy for conflicts
- * [x] Currently supported: omit, fail, overwrite
+* :heavy_plus_sign: Load dependencies with config (file optional) (to overrule, load edge-cases or commonjs files)
+* :heavy_plus_sign: Includes simple build-in (key,value) store (immutable at runtime)
+* :heavy_plus_sign: Includes events for startup and shutdown of the container (with async support)
+* :heavy_plus_sign: Includes events for all major interactions
+* :heavy_plus_sign: Define implicit require relationships (means wait for a other dependency to be ready)
+* :heavy_plus_sign: Multi-environment support (default, production or whatever)
+* :heavy_plus_sign: Auto-loader for dependencies with annotation based system (typescript only)
+* :heavy_plus_sign: Allow control for dependency at class level with param annotation (id, singleton, lazy, requires)
+* :heavy_plus_sign: Dump dynamically loaded dependencies to file system (for legacy support or faster start up times)
+* :heavy_plus_sign: Replace following aspects of the implementation with custom implementation:
+  * :heavy_plus_sign: Define how function arguments get parsed (to automatically resolve dependencies by argument names)
+  * :heavy_plus_sign: Define how the file system should be scanned (glob etc.)
+  * :heavy_plus_sign: Define how dependencies should be named in the container (match coding standards of your project)
+* :heavy_plus_sign: Debug mode to follow the resolving in cases of errors and conflicts
+* :heavy_plus_sign: Define custom resolve strategy for conflicts
+  * Currently supported: omit, fail, overwrite
 
 **Available conflict resolve strategies**
 

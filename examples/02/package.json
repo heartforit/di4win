@@ -1,12 +1,13 @@
 {
-  "name": "02",
+  "name": "example-02",
   "version": "1.0.0",
   "description": "",
   "main": "app.js",
   "scripts": {
+    "start": "node app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
+  "author": "hearforit",
   "license": "MIT",
   "dependencies": {
     "glob": "10.3.2"

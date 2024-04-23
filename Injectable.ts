@@ -1,7 +1,7 @@
 import {DiInjectableOptions} from "./interfaces/DiInjectableOptions";
 
 
-export function Injectable(input: DiInjectableOptions | null | undefined | void) {
+export default function Injectable(input: DiInjectableOptions | null | undefined | void) {
     return function some(target: any, context: any) {
         if(!target.prototype.__diMeta) target.prototype.__diMeta = {} as DiInjectableOptions
         if(!input) input = {lazy: false, singleton: true, requires: []} as DiInjectableOptions

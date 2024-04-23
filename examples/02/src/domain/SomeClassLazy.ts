@@ -1,4 +1,4 @@
-import {Injectable} from "../../../../Injectable";
+import {Injectable} from "../../../../index";
 
 @Injectable({lazy: true})
 export class SomeClassLazy {

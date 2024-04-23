@@ -9,6 +9,7 @@ import {DiContainerEvents} from "./enums/DiContainerEvents";
 import {DiContainerLogLevels} from "./enums/DiContainerLogLevels";
 import {DiContainerInitConfig} from "./interfaces/DiContainerInitConfig";
 import {DiInjectableOptions} from "./interfaces/DiInjectableOptions";
+import {DiContainerLogMessage} from "./interfaces/DiContainerLogMessage";
 
 export class DiContainer extends EventEmitter {
     private readonly _options: DiContainerOptions;
@@ -73,9 +74,8 @@ export class DiContainer extends EventEmitter {
         return this._context.has(path)
     }
 
-
     private emitLog(level: DiContainerLogLevels, message: string) {
-        this.emit(DiContainerEvents.ON_LOG, {level, message, callstack: new Error().stack})
+        this.emit(DiContainerEvents.ON_LOG, {level, message, callstack: new Error().stack} as DiContainerLogMessage)
     }
 
     async init(config: DiContainerInitConfig) {
