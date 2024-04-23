@@ -1,7 +1,7 @@
 import {Injectable} from "../../../../index";
 
 @Injectable({singleton: true})
-export class SomeClassSingleton {
+export default class SomeClassSingleton {
 
     constructor() {
     }

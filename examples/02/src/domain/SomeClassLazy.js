@@ -38,9 +38,8 @@ var __setFunctionName = (this && this.__setFunctionName) || function (f, name, p
     return Object.defineProperty(f, "name", { configurable: true, value: prefix ? "".concat(prefix, " ", name) : name });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.SomeClassLazy = void 0;
 const index_1 = require("../../../../index");
-let SomeClassLazy = exports.SomeClassLazy = (() => {
+exports.default = (() => {
     let _classDecorators = [(0, index_1.Injectable)({ lazy: true })];
     let _classDescriptor;
     let _classExtraInitializers = [];

@@ -1,7 +1,7 @@
 import {Injectable} from "../../../../index";
 
 @Injectable({id: "someClassRequired"})
-export class SomeClassRequired {
+export default class SomeClassRequired {
 
     constructor() {
     }

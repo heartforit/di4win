@@ -38,9 +38,8 @@ var __setFunctionName = (this && this.__setFunctionName) || function (f, name, p
     return Object.defineProperty(f, "name", { configurable: true, value: prefix ? "".concat(prefix, " ", name) : name });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.SomeClass = void 0;
 const index_1 = require("../../../../index");
-let SomeClass = exports.SomeClass = (() => {
+exports.default = (() => {
     let _classDecorators = [(0, index_1.Injectable)({ id: "someClass", requires: ["someClassRequired"] })];
     let _classDescriptor;
     let _classExtraInitializers = [];

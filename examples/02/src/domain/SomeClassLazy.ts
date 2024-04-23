@@ -1,7 +1,7 @@
 import {Injectable} from "../../../../index";
 
 @Injectable({lazy: true})
-export class SomeClassLazy {
+export default class SomeClassLazy {
 
     constructor() {
     }
