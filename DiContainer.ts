@@ -254,9 +254,6 @@ export class DiContainer extends EventEmitter {
                     if (!_classLoaded[namedExport].prototype || namedExport !== "default") {
                         continue;
                     }
-                    /*if(){
-                        throw new Error(`at least one default export is needed for class: ${ path.resolve(_classPath) }. If a class has more than one specific export besides default it has to be provided with # notation to specify what to load. Read the documentation for more information.`)
-                    }*/
                     const setupName = [_classPath, namedExport].join("#")
                     let injectableOptions = {
                         lazy: false,
