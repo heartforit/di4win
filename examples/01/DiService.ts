@@ -4,13 +4,15 @@ import {glob} from "glob";
 import {DependencyResolveStrategyKind} from "../../enums/DependencyResolveStrategyKind";
 import {DiContainerEvents} from "../../enums/DiContainerEvents";
 import {logger} from "./src/config/di/LoggingService";
+import {DiContainerLogMessage} from "../../interfaces/DiContainerLogMessage";
+import {DiContainerLogLevels} from "../../enums/DiContainerLogLevels";
 
 if (!process.env.NODE_ENV) {
     process.env.NODE_ENV = "default"
 }
 
 
-const DEBUG_DI_CONTAINER = false;
+const DEBUG_DI_CONTAINER = true;
 
 export class DiService {
 
@@ -27,8 +29,24 @@ export class DiService {
         });
 
         if(DEBUG_DI_CONTAINER){
-            this._diContainer.on(DiContainerEvents.ON_LOG, (logLevel: string, message: string) => {
-                logger.debug(message)
+            this._diContainer.on(DiContainerEvents.ON_LOG, (logObject: DiContainerLogMessage) => {
+                switch (logObject.level){
+                    case DiContainerLogLevels.INFO:
+                        logger.info(logObject.message);
+                        break
+                    case DiContainerLogLevels.WARN:
+                        logger.warn(logObject.message);
+                        break
+                    case DiContainerLogLevels.ERROR:
+                        logger.error(logObject.message);
+                        break
+                    case DiContainerLogLevels.DEBUG:
+                        logger.debug(logObject.message);
+                        break
+                    default:
+                        logger.debug(logObject.message);
+                        break;
+                }
             })
         }
     }

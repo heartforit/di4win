@@ -26,7 +26,7 @@ export class DiContainer extends EventEmitter {
     constructor(options: Partial<DiContainerOptions>) {
         super();
 
-        if(typeof options !== "object") {
+        if (typeof options !== "object") {
             throw new Error("invalid options object was provided")
         }
 
@@ -35,7 +35,9 @@ export class DiContainer extends EventEmitter {
             debug: false,
             parseArgs,
             emitDependencies: false,
-            fileResolver: () => {throw new Error("file resolver must be defined")},
+            fileResolver: () => {
+                throw new Error("file resolver must be defined")
+            },
             idNameTransformer: this._firstLetterToLowerCase
         }, options) as DiContainerOptions;
     }
@@ -82,7 +84,7 @@ export class DiContainer extends EventEmitter {
         if (this._containerInitialised) throw new Error("container is already initialised")
 
         if (config.store) {
-            if(typeof config.store !== "object") throw new Error("store must be type of object")
+            if (typeof config.store !== "object") throw new Error("store must be type of object")
             this._store = Object.freeze(config.store)
         }
 
@@ -115,25 +117,25 @@ export class DiContainer extends EventEmitter {
                 }
 
                 switch (this._options.dependencyResolveStrategy) {
-                case DependencyResolveStrategyKind.FAIL:
-                    if (this._diDependencies.has(_id)) {
-                        throw new Error(`id should be unique: Duplicate was found: ${_id}`)
-                    }
-                    break;
-                case DependencyResolveStrategyKind.OMIT:
-                    if (this._diDependencies.has(_id)) {
-                        if (this._options.debug) {
-                            this.emitLog(DiContainerLogLevels.DEBUG, `id: '${_id}' will be omitted`)
+                    case DependencyResolveStrategyKind.FAIL:
+                        if (this._diDependencies.has(_id)) {
+                            throw new Error(`id should be unique: Duplicate was found: ${_id}`)
                         }
-                        continue;
-                    }
-                    break;
-                case DependencyResolveStrategyKind.OVERWRITE:
-                    if (this._diDependencies.has(_id)) {
-                        if (this._options.debug) {
-                            this.emitLog(DiContainerLogLevels.DEBUG, `id: '${_id}' will be overwritten`)
+                        break;
+                    case DependencyResolveStrategyKind.OMIT:
+                        if (this._diDependencies.has(_id)) {
+                            if (this._options.debug) {
+                                this.emitLog(DiContainerLogLevels.DEBUG, `id: '${_id}' will be omitted`)
+                            }
+                            continue;
                         }
-                    }
+                        break;
+                    case DependencyResolveStrategyKind.OVERWRITE:
+                        if (this._diDependencies.has(_id)) {
+                            if (this._options.debug) {
+                                this.emitLog(DiContainerLogLevels.DEBUG, `id: '${_id}' will be overwritten`)
+                            }
+                        }
                 }
 
                 // load all custom setup scripts
@@ -237,14 +239,38 @@ export class DiContainer extends EventEmitter {
             const _classes = await this._options.fileResolver(_searchPathPattern.path, _searchPathPattern.options)
             for (const _classPath of _classes) {
                 if (!_classPath.endsWith(".js") && !_classPath.endsWith(".cjs")) continue;
-                const _classLoaded = await import(path.resolve(_classPath))
-                for (const namedExport of Object.keys(_classLoaded)) {
-                    if (_classLoaded[namedExport].prototype && typeof _classLoaded[namedExport].prototype.__diMeta === "object") {
-                        const injectableOptions = _classLoaded[namedExport].prototype.__diMeta as DiInjectableOptions
-                        const setupName = [_classPath, namedExport].join("#")
-                        const _id = injectableOptions.id || this._options.idNameTransformer(path.basename(_classPath).replace(".js", "").replace(".cjs", ""))
+                const classPathResolved = path.resolve(_classPath);
+                const _classLoaded = await import(classPathResolved)
 
-                        switch (this._options.dependencyResolveStrategy) {
+                if(Object.keys(_classLoaded).indexOf("default") === -1){
+                    this.emitLog(DiContainerLogLevels.WARN, `file on path: ${classPathResolved} does not have default export`)
+                }
+
+                for (const namedExport of Object.keys(_classLoaded)) {
+                    // at least one default export is needed for class any commonjs class.
+                    // If a class has more than one specific export besides default
+                    // it has to be provided with # notation to specify what to load.
+                    // Read the documentation for more information.
+                    if (!_classLoaded[namedExport].prototype || namedExport !== "default") {
+                        continue;
+                    }
+                    /*if(){
+                        throw new Error(`at least one default export is needed for class: ${ path.resolve(_classPath) }. If a class has more than one specific export besides default it has to be provided with # notation to specify what to load. Read the documentation for more information.`)
+                    }*/
+                    const setupName = [_classPath, namedExport].join("#")
+                    let injectableOptions = {
+                        lazy: false,
+                        singleton: true,
+                        requires: [],
+                        setup: setupName
+                    } as DiInjectableOptions;
+
+                    if (typeof _classLoaded[namedExport].prototype.__diMeta === "object") {
+                        injectableOptions = _classLoaded[namedExport].prototype.__diMeta as DiInjectableOptions
+                    }
+                    const _id = injectableOptions.id || this._options.idNameTransformer(path.basename(_classPath).replace(".js", "").replace(".cjs", ""))
+
+                    switch (this._options.dependencyResolveStrategy) {
                         case DependencyResolveStrategyKind.FAIL:
                             if (this._diDependencies.has(_id)) {
                                 const _dep = this._diDependencies.get(_id);
@@ -285,18 +311,17 @@ export class DiContainer extends EventEmitter {
                                 }
                             }
                             break;
-                        }
-
-                        this._diDependencies.set(_id, {
-                            id: _id,
-                            singleton: injectableOptions.singleton,
-                            lazy: injectableOptions.lazy,
-                            setup: setupName,
-                            requires: injectableOptions.requires || []
-                        } as DiContainerDependencyDescriptor)
-
-                        this._setupScripts.set(setupName, _classLoaded[namedExport])
                     }
+
+                    this._diDependencies.set(_id, {
+                        id: _id,
+                        singleton: injectableOptions.singleton,
+                        lazy: injectableOptions.lazy,
+                        setup: setupName,
+                        requires: injectableOptions.requires || []
+                    } as DiContainerDependencyDescriptor)
+
+                    this._setupScripts.set(setupName, _classLoaded[namedExport])
                 }
             }
         }

@@ -10,7 +10,6 @@ const node_path_1 = __importDefault(require("node:path"));
 const deepmerge_1 = __importDefault(require("deepmerge"));
 class DiYamlConfigUtil {
     loadAndParseConfigSync(pathToFile) {
-        console.log(pathToFile);
         let config = yaml_1.default.parse(node_fs_1.default.readFileSync(node_path_1.default.resolve(pathToFile), "utf-8"));
         if (config.extends) {
             config = this._extend(config, String(pathToFile));

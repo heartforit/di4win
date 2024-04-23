@@ -7,7 +7,6 @@ import {DiContainerInitConfig} from "../../interfaces/DiContainerInitConfig";
 
 export class DiYamlConfigUtil {
     loadAndParseConfigSync(pathToFile: string) {
-        console.log(pathToFile)
         let config = yaml.parse(fs.readFileSync(path.resolve(pathToFile), "utf-8")) as DiContainerInitConfig & {extends: string | string[]}
         if (config.extends) {
             config = this._extend(config, String(pathToFile))

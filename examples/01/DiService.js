@@ -11,7 +11,7 @@ const LoggingService_1 = require("./src/config/di/LoggingService");
 if (!process.env.NODE_ENV) {
     process.env.NODE_ENV = "default";
 }
-const DEBUG_DI_CONTAINER = false;
+const DEBUG_DI_CONTAINER = true;
 class DiService {
     constructor() {
         this._diContainer = new DiContainer_1.default({
@@ -23,8 +23,24 @@ class DiService {
             emitDependencies: false
         });
         if (DEBUG_DI_CONTAINER) {
-            this._diContainer.on("onLog", (logLevel, message) => {
-                LoggingService_1.logger.debug(message);
+            this._diContainer.on("onLog", (logObject) => {
+                switch (logObject.level) {
+                    case 1:
+                        LoggingService_1.logger.info(logObject.message);
+                        break;
+                    case 2:
+                        LoggingService_1.logger.warn(logObject.message);
+                        break;
+                    case 3:
+                        LoggingService_1.logger.error(logObject.message);
+                        break;
+                    case 0:
+                        LoggingService_1.logger.debug(logObject.message);
+                        break;
+                    default:
+                        LoggingService_1.logger.debug(logObject.message);
+                        break;
+                }
             });
         }
     }

@@ -54,7 +54,6 @@ import {SomeClass} from "./src/domain/SomeClass";
     });
 
     if (DEBUG_DI_CONTAINER) {
-        console.log("test")
         diContainer.on(DiContainerEvents.ON_LOG, (logObject: any) => {
             logger.debug(logObject.message)
         })

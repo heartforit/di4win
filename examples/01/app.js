@@ -9,4 +9,6 @@ const DiService_1 = require("./DiService");
     server.listen(store.server.http.port, () => {
         logger.debug(`listening on *:${store.server.http.port}`);
     });
+    const someClass = await DiService_1.diService.diContainer.get("someClass");
+    console.log(someClass);
 })();

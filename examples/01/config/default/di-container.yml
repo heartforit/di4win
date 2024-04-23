@@ -7,6 +7,8 @@ options:
         ignore: "**/index.js"
 
 items:
+  - id: commonJsLegacyClass
+    setup: src/CommonJsLegacyClass.js#test
   - id: logger
     setup: src/config/di/DiLoggerSetup.js
   - id: server

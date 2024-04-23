@@ -31,7 +31,6 @@ const glob_1 = require("glob");
         emitDependencies: false
     });
     if (DEBUG_DI_CONTAINER) {
-        console.log("test");
         diContainer.on("onLog", (logObject) => {
             LoggingService_1.logger.debug(logObject.message);
         });

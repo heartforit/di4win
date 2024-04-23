@@ -1,6 +1,7 @@
 import http from "http";
 import {diService} from "./DiService";
 import winston from "winston";
+import SomeClass from "./src/SomeClass";
 
 // Can be used to test different config setups
 // process.env.NODE_ENV = "prod";
@@ -14,4 +15,7 @@ import winston from "winston";
     server.listen(store.server.http.port, () => {
         logger.debug(`listening on *:${store.server.http.port}`);
     });
+
+    const someClass = <SomeClass>await diService.diContainer.get("someClass");
+    console.log(someClass)
 })()

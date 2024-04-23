@@ -50,7 +50,9 @@ class DiContainer extends node_events_1.default {
             debug: false,
             parseArgs: ReflectionUtil_1.parseArgs,
             emitDependencies: false,
-            fileResolver: () => { throw new Error("file resolver must be defined"); },
+            fileResolver: () => {
+                throw new Error("file resolver must be defined");
+            },
             idNameTransformer: this._firstLetterToLowerCase
         }, options);
     }
@@ -120,7 +122,7 @@ class DiContainer extends node_events_1.default {
                     case 2:
                         if (this._diDependencies.has(_id)) {
                             if (this._options.debug) {
-                                this.emitLog("debug", `id: '${_id}' will be omitted`);
+                                this.emitLog(0, `id: '${_id}' will be omitted`);
                             }
                             continue;
                         }
@@ -128,7 +130,7 @@ class DiContainer extends node_events_1.default {
                     case 1:
                         if (this._diDependencies.has(_id)) {
                             if (this._options.debug) {
-                                this.emitLog("debug", `id: '${_id}' will be overwritten`);
+                                this.emitLog(0, `id: '${_id}' will be overwritten`);
                             }
                         }
                 }
@@ -191,7 +193,7 @@ class DiContainer extends node_events_1.default {
         for (const anyDependency of this._context.values()) {
             if (anyDependency instanceof DiContainerLifeCycle_1.DiContainerLifeCycle) {
                 if (this._options.debug) {
-                    this.emitLog("debug", "call onContainerReady");
+                    this.emitLog(0, "call onContainerReady");
                 }
                 await anyDependency.onContainerReady(this);
             }
@@ -204,7 +206,7 @@ class DiContainer extends node_events_1.default {
         for (const anyDependency of this._context.values()) {
             if (anyDependency instanceof DiContainerLifeCycle_1.DiContainerLifeCycle) {
                 if (this._options.debug) {
-                    this.emitLog("debug", "call onContainerShutdown");
+                    this.emitLog(0, "call onContainerShutdown");
                 }
                 await anyDependency.onContainerShutdown(this);
             }
@@ -219,62 +221,75 @@ class DiContainer extends node_events_1.default {
             for (const _classPath of _classes) {
                 if (!_classPath.endsWith(".js") && !_classPath.endsWith(".cjs"))
                     continue;
-                const _classLoaded = await Promise.resolve(`${node_path_1.default.resolve(_classPath)}`).then(s => __importStar(require(s)));
+                const classPathResolved = node_path_1.default.resolve(_classPath);
+                const _classLoaded = await Promise.resolve(`${classPathResolved}`).then(s => __importStar(require(s)));
+                if (Object.keys(_classLoaded).indexOf("default") === -1) {
+                    this.emitLog(2, `file on path: ${classPathResolved} does not have default export`);
+                }
                 for (const namedExport of Object.keys(_classLoaded)) {
-                    if (_classLoaded[namedExport].prototype && typeof _classLoaded[namedExport].prototype.__diMeta === "object") {
-                        const injectableOptions = _classLoaded[namedExport].prototype.__diMeta;
-                        const setupName = [_classPath, namedExport].join("#");
-                        const _id = injectableOptions.id || this._options.idNameTransformer(node_path_1.default.basename(_classPath).replace(".js", "").replace(".cjs", ""));
-                        switch (this._options.dependencyResolveStrategy) {
-                            case 0:
-                                if (this._diDependencies.has(_id)) {
-                                    const _dep = this._diDependencies.get(_id);
-                                    if (_dep) {
-                                        const _classLoadedAlready = this._setupScripts.get(_dep.setup);
-                                        if (_classLoadedAlready !== _classLoaded[namedExport]) {
-                                            throw new Error(`id should be unique: Duplicate was found: ${_id}`);
-                                        }
-                                        else {
-                                            continue;
-                                        }
-                                    }
-                                    else {
+                    if (!_classLoaded[namedExport].prototype || namedExport !== "default") {
+                        continue;
+                    }
+                    const setupName = [_classPath, namedExport].join("#");
+                    let injectableOptions = {
+                        lazy: false,
+                        singleton: true,
+                        requires: [],
+                        setup: setupName
+                    };
+                    if (typeof _classLoaded[namedExport].prototype.__diMeta === "object") {
+                        injectableOptions = _classLoaded[namedExport].prototype.__diMeta;
+                    }
+                    const _id = injectableOptions.id || this._options.idNameTransformer(node_path_1.default.basename(_classPath).replace(".js", "").replace(".cjs", ""));
+                    switch (this._options.dependencyResolveStrategy) {
+                        case 0:
+                            if (this._diDependencies.has(_id)) {
+                                const _dep = this._diDependencies.get(_id);
+                                if (_dep) {
+                                    const _classLoadedAlready = this._setupScripts.get(_dep.setup);
+                                    if (_classLoadedAlready !== _classLoaded[namedExport]) {
                                         throw new Error(`id should be unique: Duplicate was found: ${_id}`);
                                     }
-                                }
-                                break;
-                            case 2:
-                                if (this._diDependencies.has(_id)) {
-                                    if (this._options.debug) {
-                                        this.emitLog("debug", `id: '${_id}' will be omitted`);
-                                    }
-                                    continue;
-                                }
-                                break;
-                            case 1:
-                                if (this._diDependencies.has(_id)) {
-                                    if (this._options.debug) {
-                                        this.emitLog("debug", `id: '${_id}' will be overwritten`);
+                                    else {
+                                        continue;
                                     }
                                 }
-                                break;
-                        }
-                        this._diDependencies.set(_id, {
-                            id: _id,
-                            singleton: injectableOptions.singleton,
-                            lazy: injectableOptions.lazy,
-                            setup: setupName,
-                            requires: injectableOptions.requires || []
-                        });
-                        this._setupScripts.set(setupName, _classLoaded[namedExport]);
+                                else {
+                                    throw new Error(`id should be unique: Duplicate was found: ${_id}`);
+                                }
+                            }
+                            break;
+                        case 2:
+                            if (this._diDependencies.has(_id)) {
+                                if (this._options.debug) {
+                                    this.emitLog(0, `id: '${_id}' will be omitted`);
+                                }
+                                continue;
+                            }
+                            break;
+                        case 1:
+                            if (this._diDependencies.has(_id)) {
+                                if (this._options.debug) {
+                                    this.emitLog(0, `id: '${_id}' will be overwritten`);
+                                }
+                            }
+                            break;
                     }
+                    this._diDependencies.set(_id, {
+                        id: _id,
+                        singleton: injectableOptions.singleton,
+                        lazy: injectableOptions.lazy,
+                        setup: setupName,
+                        requires: injectableOptions.requires || []
+                    });
+                    this._setupScripts.set(setupName, _classLoaded[namedExport]);
                 }
             }
         }
     }
     async initClass(id) {
         if (this._options.debug) {
-            this.emitLog("debug", `call initClass with id '${id}'`);
+            this.emitLog(0, `call initClass with id '${id}'`);
         }
         if (this.has(id))
             return this.get(id);
@@ -286,7 +301,7 @@ class DiContainer extends node_events_1.default {
             for (const _require of _item.requires) {
                 if (!this.has(_require)) {
                     if (this._options.debug) {
-                        this.emitLog("debug", `call initClass from require context with id '${_require}'`);
+                        this.emitLog(0, `call initClass from require context with id '${_require}'`);
                     }
                     await this.initClass(_require);
                 }
@@ -302,7 +317,7 @@ class DiContainer extends node_events_1.default {
             for (const _name of argRequires) {
                 if (!this.has(_name)) {
                     if (this._options.debug) {
-                        this.emitLog("debug", `call initClass from argRequires context with id '${_name}'`);
+                        this.emitLog(0, `call initClass from argRequires context with id '${_name}'`);
                     }
                     await this.initClass(_name);
                 }
@@ -314,10 +329,10 @@ class DiContainer extends node_events_1.default {
         if (_item.lazy) {
             if (this._options.debug) {
                 if (!_item.singleton) {
-                    this.emitLog("debug", `item with id '${_item.id}' will be initialised lazy and NOT as singleton`);
+                    this.emitLog(0, `item with id '${_item.id}' will be initialised lazy and NOT as singleton`);
                 }
                 else {
-                    this.emitLog("debug", `item with id '${_item.id}' will be initialised lazy and as singleton`);
+                    this.emitLog(0, `item with id '${_item.id}' will be initialised lazy and as singleton`);
                 }
             }
             this.register(_item.id, async function lazyInit() {
@@ -336,14 +351,14 @@ class DiContainer extends node_events_1.default {
         else {
             if (_item.singleton) {
                 if (this._options.debug) {
-                    this.emitLog("debug", `item with id '${_item.id}' will be initialised NOT lazy and as singleton`);
+                    this.emitLog(0, `item with id '${_item.id}' will be initialised NOT lazy and as singleton`);
                 }
                 const instance = await this.createInstanceOf(setupAction, _item.args);
                 this.register(_item.id, instance);
             }
             else {
                 if (this._options.debug) {
-                    this.emitLog("debug", `item with id '${_item.id}' will be initialised NOT lazy, NOT singleton, but as instant`);
+                    this.emitLog(0, `item with id '${_item.id}' will be initialised NOT lazy, NOT singleton, but as instant`);
                 }
                 this.register(_item.id, async function nonSingleton() {
                     return await _that.createInstanceOf(setupAction, _item.args);
