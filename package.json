@@ -1,6 +1,6 @@
 {
   "name": "di4win",
-  "version": "1.0.3",
+  "version": "1.0.5",
   "description": "di4win is yet another simple to use straight forward and classic dependency injection container.",
   "type": "module",
   "main": "index.js",
@@ -8,6 +8,7 @@
     "build": "npx tsc",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "files": ["**/*.js", "**/*.ts", "**/*.json", "**/*.yml", "**/*.yaml"],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/heartforit/di4win.git"
