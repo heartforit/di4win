@@ -1,6 +1,6 @@
 {
   "name": "di4win",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "di4win is yet another simple to use straight forward and classic dependency injection container.",
   "type": "module",
   "main": "index.js",
