@@ -11,7 +11,7 @@
 
 **Introduction:**
 
-By its nature it helps to increase **code quality**, **maintainability** and **performance (reduce memory usage**.
+By its nature it helps to increase **code quality**, **maintainability** and **performance (reduce memory usage**).
 
 **Problem:**
 * Code is hard to replace if the code base grows over certain levels / class numbers
