@@ -5,7 +5,7 @@ import {DependencyResolveStrategyKind} from "../../enums/DependencyResolveStrate
 import {glob} from "glob";
 import {DiContainerInitConfig} from "../../interfaces/DiContainerInitConfig";
 import {DiContainerDependencyDescriptor} from "../../interfaces/DiContainerDependencyDescriptor";
-import {SomeClass} from "./src/domain/SomeClass";
+import SomeClass from "./src/domain/SomeClass";
 
 (async () => {
     // basic usage
